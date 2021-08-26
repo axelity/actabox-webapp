@@ -1,0 +1,9 @@
+{
+  "greeting": "Hello world",
+  "action": {
+    "add": "Add",
+    "reset": "Reset",
+    "back": "Back",
+    "view": "View"
+  }
+}

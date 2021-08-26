@@ -1,0 +1,9 @@
+{
+  "greeting": "Bonjour le monde",
+  "action": {
+    "add": "Ajouter",
+    "reset": "Réinitialiser",
+    "back": "Retour",
+    "view": "Voir"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "greeting": "Hallo Welt",
+  "action": {
+    "add": "Addieren",
+    "reset": "Zurücksetzen",
+    "back": "Zurück",
+    "view": "Ansicht"
+  }
+}
