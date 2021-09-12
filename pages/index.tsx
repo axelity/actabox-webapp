@@ -10,7 +10,8 @@ import SignaturePlaceholder from '../components/SignaturePlaceholder'
 import Resizer from '../components/Resizer'
 import Bolla from '../components/Bolla'
 import SignaturePad from '../components/SignaturePad'
-import SmoothPad from '../components/SmoothPad'
+import SmoothPad from '../components/Wrapper'
+import Wrapper from '../components/Wrapper'
 
 export default function Home() {
   let { t } = useTranslation()
@@ -92,11 +93,12 @@ export default function Home() {
       <p className="text-base">{sharedSecret}</p>
       <p className="text-base font-bold">Decrypted secret</p>
       <p className="text-base">{decryptedSecret}</p>
-      <SmoothPad height={100} width={300} />
+      <Wrapper />
+      {/* <SmoothPad height={100} width={300} /> */}
       <div style={{ width: '400px', height: '400px' }} className="relative bg-gray-100">
         {/* <SignaturePlaceholder height={50} width={180} left={50} top={50} /> */}
-        <Resizer size={20} left={50} top={50} />
-        <Resizer size={20} left={150} top={50} />
+        {/* <Resizer size={20} left={50} top={50} />
+        <Resizer size={20} left={150} top={50} /> */}
         {/* <Resizer size={20} left={50} top={150} />
         <Resizer size={20} left={150} top={150} /> */}
         {/* <Bolla left={50} top={50} />
