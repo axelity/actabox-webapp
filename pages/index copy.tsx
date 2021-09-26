@@ -12,7 +12,6 @@ import Bolla from '../components/Bolla'
 import SignaturePad from '../components/SignaturePad'
 import SmoothPad from '../components/Wrapper'
 import Wrapper from '../components/Wrapper'
-import ResizableDiv from '../components/ResizableDiv'
 
 export default function Home() {
   let { t } = useTranslation()
@@ -71,7 +70,40 @@ export default function Home() {
 
   return (
     <div>
-      <ResizableDiv />
+      <h1 className="text-2xl text-acb-primary">{t('common:greeting')}</h1>
+      <h2 className="text-xl text-acb-secondary">{t('about:title')}</h2>
+      <h3 className="text-md">
+        {t('about:introduction', {
+          name: 'Thomas',
+          age: 51,
+        })}
+      </h3>
+      <Button label={t('common:action.add')} onClick={handleAdd}></Button>
+      <Button label={t('common:action.reset')} onClick={handleReset}></Button>
+      <Button label={t('common:action.view')} onClick={handleView}></Button>
+      <Button label={'Sicher'} onClick={handleSicher}></Button>
+      <p className="text-6xl">{numCustomers.num}</p>
+      <p className="text-base font-bold">Private Key</p>
+      <p className="text-base">{privateKey}</p>
+      <p className="text-base font-bold">Public Key</p>
+      <p className="text-base">{publicKey}</p>
+      <p className="text-base font-bold">Encapsulated Secret</p>
+      <p className="text-base">{encapsulatedSecret}</p>
+      <p className="text-base font-bold">Shared Secret</p>
+      <p className="text-base">{sharedSecret}</p>
+      <p className="text-base font-bold">Decrypted secret</p>
+      <p className="text-base">{decryptedSecret}</p>
+      <Wrapper />
+      {/* <SmoothPad height={100} width={300} /> */}
+      <div style={{ width: '400px', height: '400px' }} className="relative bg-gray-100">
+        {/* <SignaturePlaceholder height={50} width={180} left={50} top={50} /> */}
+        {/* <Resizer size={20} left={50} top={50} />
+        <Resizer size={20} left={150} top={50} /> */}
+        {/* <Resizer size={20} left={50} top={150} />
+        <Resizer size={20} left={150} top={150} /> */}
+        {/* <Bolla left={50} top={50} />
+        <Bolla left={150} top={50} /> */}
+      </div>
     </div>
   )
 }
