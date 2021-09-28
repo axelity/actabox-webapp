@@ -6,12 +6,7 @@ import { useRouter } from 'next/router'
 import { Sicher } from '@axelity/sicher.js'
 
 import { useCustomerNumStore } from '../store/numberStore'
-import SignaturePlaceholder from '../components/SignaturePlaceholder'
-import Resizer from '../components/Resizer'
-import Bolla from '../components/Bolla'
-import SignaturePad from '../components/SignaturePad'
-import SmoothPad from '../components/Wrapper'
-import Wrapper from '../components/Wrapper'
+import SmoothPad from '../components/SmoothPad'
 import ResizableDiv from '../components/ResizableDiv'
 
 export default function Home() {
@@ -71,8 +66,34 @@ export default function Home() {
 
   return (
     <div>
-      <ResizableDiv left={100} top={100} />
-      <ResizableDiv left={300} top={300} />
+      <SmoothPad />
+      <ResizableDiv left={100} top={100} width={720} height={240} minHeight={80} minWidth={240}>
+        <h1 className="text-2xl text-acb-primary">{t('common:greeting')}</h1>
+        <h2 className="text-xl text-acb-secondary">{t('about:title')}</h2>
+        <h3 className="text-md">
+          {t('about:introduction', {
+            name: 'Thomas',
+            age: 51,
+          })}
+        </h3>
+        <Button label={t('common:action.add')} onClick={handleAdd}></Button>
+        <Button label={t('common:action.reset')} onClick={handleReset}></Button>
+        <Button label={t('common:action.view')} onClick={handleView}></Button>
+        <Button label={'Sicher'} onClick={handleSicher}></Button>
+        <p className="text-6xl">{numCustomers.num}</p>
+        <p className="text-base font-bold">Private Key</p>
+        <p className="text-base">{privateKey}</p>
+        <p className="text-base font-bold">Public Key</p>
+        <p className="text-base">{publicKey}</p>
+        <p className="text-base font-bold">Encapsulated Secret</p>
+        <p className="text-base">{encapsulatedSecret}</p>
+        <p className="text-base font-bold">Shared Secret</p>
+        <p className="text-base">{sharedSecret}</p>
+        <p className="text-base font-bold">Decrypted secret</p>
+        <p className="text-base">{decryptedSecret}</p>
+      </ResizableDiv>
+      {/* <ResizableDiv left={100} top={100} />
+      <ResizableDiv left={300} top={300} /> */}
     </div>
   )
 }
