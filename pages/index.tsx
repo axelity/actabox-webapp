@@ -71,7 +71,8 @@ export default function Home() {
 
   return (
     <div>
-      <ResizableDiv />
+      <ResizableDiv left={100} top={100} />
+      <ResizableDiv left={300} top={300} />
     </div>
   )
 }
