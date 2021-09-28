@@ -29,81 +29,91 @@ const ResizableDiv: FunctionComponent<ResizableDivProps> = ({
 }) => {
   const resizableDivRef = useRef<HTMLDivElement>(null)
 
-  const [original, setOriginal] = useState<Original>()
-
-  const handleMouseDown = (e: any) => {
-    e.preventDefault()
-    const element = resizableDivRef.current as HTMLDivElement
-
-    setOriginal({
-      width: parseFloat(getComputedStyle(element, null).getPropertyValue('width').replace('px', '')),
-      height: parseFloat(getComputedStyle(element, null).getPropertyValue('height').replace('px', '')),
-      x: element.getBoundingClientRect().left,
-      y: element.getBoundingClientRect().top,
-      mouseX: e.pageX,
-      mouseY: e.pageY
-    })
-
-  
-    function resize(e: MouseEvent) {
-      const element = resizableDivRef.current as HTMLDivElement
-  
-      if (currentResizer.classList.contains('bottom-right')) {
-        const width = original_width + (e.pageX - original_mouse_x);
-        const height = original_height + (e.pageY - original_mouse_y)
-        if (width > minimum_size) {
-          element.style.width = width + 'px'
-        }
-        if (height > minimum_size) {
-          element.style.height = height + 'px'
-        }
-      }
-      else if (currentResizer.classList.contains('bottom-left')) {
-        const height = original_height + (e.pageY - original_mouse_y)
-        const width = original_width - (e.pageX - original_mouse_x)
-        if (height > minimum_size) {
-          element.style.height = height + 'px'
-        }
-        if (width > minimum_size) {
-          element.style.width = width + 'px'
-          element.style.left = original_x + (e.pageX - original_mouse_x) + 'px'
-        }
-      }
-      else if (currentResizer.classList.contains('top-right')) {
-        const width = original_width + (e.pageX - original_mouse_x)
-        const height = original_height - (e.pageY - original_mouse_y)
-        if (width > minimum_size) {
-          element.style.width = width + 'px'
-        }
-        if (height > minimum_size) {
-          element.style.height = height + 'px'
-          element.style.top = original_y + (e.pageY - original_mouse_y) + 'px'
-        }
-      }
-      else {
-        const width = original_width - (e.pageX - original_mouse_x)
-        const height = original_height - (e.pageY - original_mouse_y)
-        if (width > minimum_size) {
-          element.style.width = width + 'px'
-          element.style.left = original_x + (e.pageX - original_mouse_x) + 'px'
-        }
-        if (height > minimum_size) {
-          element.style.height = height + 'px'
-          element.style.top = original_y + (e.pageY - original_mouse_y) + 'px'
-        }
-      }
-    }
-    
-    function stopResize() {
-      window.removeEventListener('mousemove', resize)
-    }
-
-    window.addEventListener('mousemove', resize)
-    window.addEventListener('mouseup', stopResize)
-  }
+  const [original, setOriginal] = useState<Original>({
+    width: 0,
+    height: 0,
+    mouseX: 0,
+    mouseY: 0,
+    x: 0,
+    y: 0
+  })
 
   useEffect(() => {
+    const resizers = document.querySelectorAll('.resizer')
 
+    for (let i = 0;i < resizers.length; i++) {
+      const currentResizer = resizers[i];
+
+      currentResizer.addEventListener('mousedown', (e: any) => {
+        e.preventDefault()
+        const element = resizableDivRef.current as HTMLDivElement
+    
+        setOriginal({
+          width: parseFloat(getComputedStyle(element, null).getPropertyValue('width').replace('px', '')),
+          height: parseFloat(getComputedStyle(element, null).getPropertyValue('height').replace('px', '')),
+          x: element.getBoundingClientRect().left,
+          y: element.getBoundingClientRect().top,
+          mouseX: e.pageX,
+          mouseY: e.pageY
+        })
+        
+        function resize(e: any) {
+          const element = resizableDivRef.current as any
+      
+          if (currentResizer.classList.contains('bottom-right')) {
+            const width = original.width + (e.pageX - original.mouseX);
+            const height = original.height + (e.pageY - original.mouseY)
+            if (width > minWidth) {
+              element.style.width = width + 'px'
+            }
+            if (height > minHeight) {
+              element.style.height = height + 'px'
+            }
+          }
+          else if (currentResizer.classList.contains('bottom-left')) {
+            const height = original.height + (e.pageY - original.mouseY)
+            const width = original.width - (e.pageX - original.mouseX)
+            if (height > minHeight) {
+              element.style.height = height + 'px'
+            }
+            if (width > minWidth) {
+              element.style.width = width + 'px'
+              element.style.left = original.x + (e.pageX - original.mouseX) + 'px'
+            }
+          }
+          else if (currentResizer.classList.contains('top-right')) {
+            const width = original.width + (e.pageX - original.mouseX)
+            const height = original.height - (e.pageY - original.mouseY)
+            if (width > minWidth) {
+              element.style.width = width + 'px'
+            }
+            if (height > minHeight) {
+              element.style.height = height + 'px'
+              element.style.top = original.y + (e.pageY - original.mouseY) + 'px'
+            }
+          }
+          else {
+            const width = original.width - (e.pageX - original.mouseX)
+            const height = original.height - (e.pageY - original.mouseY)
+            if (width > minWidth) {
+              element.style.width = width + 'px'
+              element.style.left = original.x + (e.pageX - original.mouseX) + 'px'
+            }
+            if (height > minHeight) {
+              element.style.height = height + 'px'
+              element.style.top = original.y + (e.pageY - original.mouseY) + 'px'
+            }
+          }
+        }
+        
+        function stopResize() {
+          window.removeEventListener('mousemove', resize)
+        }
+    
+        window.addEventListener('mousemove', resize)
+        window.addEventListener('mouseup', stopResize)
+      })
+    }
   }, [])
 
   return (
@@ -114,10 +124,11 @@ const ResizableDiv: FunctionComponent<ResizableDivProps> = ({
         height: `${height}px`,
         position: 'absolute',
         top: `${top}px`,
-        left: `${left}px`,
+        left: `${left}px`
       }}
+      ref={resizableDivRef}
     >
-      <div style={{ width: '100%', height: '100%', border: '3px solid #4286f4', boxSizing: 'border-box', borderRadius: '5%' }}>
+      <div style={{ width: '100%', height: '100%', border: '3px solid #4286f4', boxSizing: 'border-box' }}>
         {/* top left */}
         <div
           style={{
@@ -131,6 +142,7 @@ const ResizableDiv: FunctionComponent<ResizableDivProps> = ({
             top: '-5px',
             cursor: 'nwse-resize',
           }}
+          className="resizer top-left"
         ></div>
         {/* top right */}
         <div
@@ -145,6 +157,7 @@ const ResizableDiv: FunctionComponent<ResizableDivProps> = ({
             top: '-5px',
             cursor: 'nesw-resize',
           }}
+          className="resizer top-right"
         ></div>
         {/* bottom left */}
         <div
@@ -159,6 +172,7 @@ const ResizableDiv: FunctionComponent<ResizableDivProps> = ({
             bottom: '-5px',
             cursor: 'nesw-resize',
           }}
+          className="resizer bottom-left"
         ></div>
         {/* bottom right */}
         <div
@@ -173,6 +187,7 @@ const ResizableDiv: FunctionComponent<ResizableDivProps> = ({
             bottom: '-5px',
             cursor: 'nwse-resize',
           }}
+          className="resizer bottom-right"
         ></div>
         {children}
       </div>
