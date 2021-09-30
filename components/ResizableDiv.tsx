@@ -34,6 +34,9 @@ const ResizableDiv: FunctionComponent<ResizableDivProps> = ({ width = 100, heigh
   const resizableDivRef = useRef<HTMLDivElement>(null)
   const element = resizableDivRef.current as HTMLDivElement
 
+  const SCALE = 5/18
+  const SCALE_REV = 18/5
+
   let original: Original = {
     width: 0,
     height: 0,
@@ -127,7 +130,9 @@ const ResizableDiv: FunctionComponent<ResizableDivProps> = ({ width = 100, heigh
 
   const resizeTopLeft = (e: any) => {
     const width = original.width - (e.pageX - original.mouseX)
-    const height = original.height - (e.pageY - original.mouseY)
+    // const height = original.height - (e.pageY - original.mouseY)
+    const height = width * SCALE
+
 
     rectangle = {
       width: width > minWidth ? width : rectangle.width,
@@ -157,7 +162,8 @@ const ResizableDiv: FunctionComponent<ResizableDivProps> = ({ width = 100, heigh
 
   const resizeTopRight = (e: any) => {
     const width = original.width + (e.pageX - original.mouseX)
-    const height = original.height - (e.pageY - original.mouseY)
+    // const height = original.height - (e.pageY - original.mouseY)
+    const height = width * SCALE
 
     rectangle = {
       width: width > minWidth ? width : rectangle.width,
@@ -175,6 +181,37 @@ const ResizableDiv: FunctionComponent<ResizableDivProps> = ({ width = 100, heigh
   }
 
   /**
+   * right
+   */
+  const lockRight = (e: any) => {
+    moveEnabled = false
+    setOriginal(e)
+
+    window.addEventListener('mousemove', resizeTopRight)
+    window.addEventListener('mouseup', releaseTopRight)
+  }
+
+  const resizeRight = (e: any) => {
+    const width = original.width + (e.pageX - original.mouseX)
+    // const height = original.height - (e.pageY - original.mouseY)
+    const height = width * SCALE
+
+    rectangle = {
+      width: width > minWidth ? width : rectangle.width,
+      height: height > minHeight ? height : rectangle.height,
+      left: rectangle.left,
+      top: rectangle.top,
+    }
+
+    setResizable()
+  }
+
+  const releaseRight = (e: any) => {
+    moveEnabled = true
+    window.removeEventListener('mousemove', resizeRight)
+  }
+
+  /**
    * Bottom left
    */
   const lockBottomLeft = (e: any) => {
@@ -186,8 +223,9 @@ const ResizableDiv: FunctionComponent<ResizableDivProps> = ({ width = 100, heigh
   }
 
   const resizeBottomLeft = (e: any) => {
-    const height = original.height + (e.pageY - original.mouseY)
     const width = original.width - (e.pageX - original.mouseX)
+    //const height = original.height + (e.pageY - original.mouseY)
+    const height = width * SCALE
 
     rectangle = {
       height: height > minHeight ? height : rectangle.height,
@@ -205,6 +243,36 @@ const ResizableDiv: FunctionComponent<ResizableDivProps> = ({ width = 100, heigh
   }
 
   /**
+   * Bottom
+   */
+  const lockBottom = (e: any) => {
+    moveEnabled = false
+    setOriginal(e)
+
+    window.addEventListener('mousemove', resizeBottom)
+    window.addEventListener('mouseup', releaseBottom)
+  }
+
+  const resizeBottom = (e: any) => {
+    const height = original.height + (e.pageY - original.mouseY)
+    const width = height * SCALE_REV
+
+    rectangle = {
+      height: height > minHeight ? height : rectangle.height,
+      width: width > minWidth ? width : rectangle.width,
+      top: rectangle.top,
+      left: rectangle.left,
+    }
+
+    setResizable()
+  }
+
+  const releaseBottom = (e: any) => {
+    moveEnabled = true
+    window.removeEventListener('mousemove', resizeBottom)
+  }
+
+  /**
    * Bottom right
    */
   const lockBottomRight = (e: any) => {
@@ -217,7 +285,8 @@ const ResizableDiv: FunctionComponent<ResizableDivProps> = ({ width = 100, heigh
 
   const resizeBottomRight = (e: any) => {
     const width = original.width + (e.pageX - original.mouseX)
-    const height = original.height + (e.pageY - original.mouseY)
+    //const height = original.height + (e.pageY - original.mouseY)
+    const height = width * SCALE
 
     rectangle = {
       height: height > minHeight ? height : rectangle.height,
@@ -285,6 +354,21 @@ const ResizableDiv: FunctionComponent<ResizableDivProps> = ({ width = 100, heigh
           }}
           onMouseDown={lockTopRight}
         ></div>
+        {/* right */}
+        <div
+          style={{
+            width: '10px',
+            height: '100%',
+            marginTop: '5px',
+            marginBottom: '0px',
+            position: 'absolute',
+            right: '-5px',
+            top: '0px',
+            cursor: 'ew-resize',
+            zIndex: 10,
+          }}
+          onMouseDown={lockTopRight}
+        ></div>
         {/* bottom left */}
         <div
           style={{
@@ -297,6 +381,20 @@ const ResizableDiv: FunctionComponent<ResizableDivProps> = ({ width = 100, heigh
             zIndex: 10,
           }}
           onMouseDown={lockBottomLeft}
+        ></div>
+        {/* bottom */}
+        <div
+          style={{
+            width: '100%',
+            marginLeft: '0px',
+            marginRight: '0px',
+            height: '10px',
+            position: 'absolute',
+            bottom: '-5px',
+            cursor: 'ns-resize',
+            zIndex: 10,
+          }}
+          onMouseDown={lockBottom}
         ></div>
         {/* bottom right */}
         <div
